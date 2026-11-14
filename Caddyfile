@@ -1,0 +1,15 @@
+# SITE_ADDRESS=":80"          -> HTTP por IP pública (no necesita dominio)
+# SITE_ADDRESS="tienda.ejemplo.cl" -> HTTPS automático con Let's Encrypt (el dominio debe apuntar a la EC2)
+{$SITE_ADDRESS::80} {
+	encode gzip
+
+	handle /api/* {
+		reverse_proxy backend:8080
+	}
+
+	handle {
+		root * /srv/web
+		try_files {path} /index.html
+		file_server
+	}
+}
